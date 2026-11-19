@@ -48,9 +48,21 @@ async function sendMessage() {
 function appendMessage(text, sender) { 
     const chatBox = document.getElementById('chatBox'); 
     const messageDiv = document.createElement('div'); 
-    messageDiv.className = `message ${sender}`; 
-    messageDiv.textContent = text; 
-    chatBox.appendChild(messageDiv); 
+    messageDiv.className = `message ${sender}`;
+
+    // Convertir **texto** en negritas. Se crean nodos (no innerHTML),
+    // así el texto de la IA nunca se interpreta como HTML.
+    text.split(/\*\*(.+?)\*\*/g).forEach((parte, i) => {
+        if (i % 2 === 1) {
+            const negrita = document.createElement('strong');
+            negrita.textContent = parte;
+            messageDiv.appendChild(negrita);
+        } else {
+            messageDiv.appendChild(document.createTextNode(parte));
+        }
+    });
+
+    chatBox.appendChild(messageDiv);
 } 
  
 function handleKeyPress(event) { 
